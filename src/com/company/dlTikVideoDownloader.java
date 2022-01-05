@@ -117,15 +117,13 @@ public class dlTikVideoDownloader {
             driver.findElement(By.id("btn-submit-link")).click();
             Thread.sleep(3000);
             try {
-            String text = driver.findElement(By.xpath("//P[contains(text(),'#')]")).getText();
+            String text = driver.findElement(By.xpath("//P[contains(text(),'')]")).getText();
 
             String[] temp = text.split("\\#");
             String tagName = (temp[0]);
 //                    .replaceAll("[^a-zA-Z]", " ");
             System.out.println(tagName);
             System.out.println();
-
-
 
                 writeToCSVURLAndTagName(vid, tagName, myWriter);
             }
