@@ -16,5 +16,28 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../selenium Jars n drivers" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../selenium Jars n drivers" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../selenium Jars n drivers" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../selenium Jars n drivers" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../selenium Jars n drivers/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/../selenium Jars n drivers/lib" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>

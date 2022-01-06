@@ -18,6 +18,7 @@ import java.util.List;
 
 public class Helper {
 
+    static int vCounter;
     public static String getTodayDate() {
         String today = "";
         try {
@@ -61,7 +62,7 @@ public class Helper {
     }
 
     public static void channelVideosToCSV(List<WebElement> videos, FileWriter myWriter) throws IOException {
-        System.out.println("Inside channelVideos");
+        System.out.println("Inside channel Videos to CSV");
 
         System.out.println("" + videos.size());
         for (WebElement link : videos
@@ -69,8 +70,6 @@ public class Helper {
             myWriter.write(link.getAttribute("href"));
             myWriter.write("\n");
         }
-
-        System.out.println();
 
     }
 
@@ -123,11 +122,11 @@ public class Helper {
     }
 
     public static void writeToCSVURLAndTagName(String videos,String temp, FileWriter myWriter) throws IOException {
-        System.out.println("Inside channelVideos");
-
+        System.out.println("Writing channelVideos to CSV");
             myWriter.write(videos+',');
             myWriter.write(temp);
             myWriter.write("\n");
+            System.out.println("Files written " + ++vCounter);
         }
 
 }
