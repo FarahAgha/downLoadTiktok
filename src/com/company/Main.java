@@ -17,7 +17,8 @@ public class Main {
 
 
 
-        String filename = "//Users//fagha//Documents//myProjects//Read1641140159788.csv";
+        //String filename = "//Users//fagha//Documents//myProjects//Read1641140159788.csv";
+        String filename = "C://Users//Deltaman//Downloads//www.tiktok.com-1641140159788.csv";
         List<String> vidLst = readCsvFile(filename);
         try {
             dltikDownloadFromCSVFile(vidLst);
