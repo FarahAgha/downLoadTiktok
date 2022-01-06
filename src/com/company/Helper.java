@@ -92,19 +92,9 @@ public class Helper {
 
             //Read the file line by line starting from the second line
             while ((line = fileReader.readLine()) != null) {
-                //Get all tokens available in line
-//                String[] tokens = line.split(COMMA_DELIMITER);
-//                if (tokens.length > 0)
-//                {
-                    //Create a new student object and fill his  data
                     videoURLs.add(line);
 //                }
             }
-
-            //Print the new student list
-//            for (String student : videoURLs) {
-//                System.out.println(student);
-//            }
 
         } catch (Exception e) {
             System.out.println("Error in CsvFileReader !!!");
