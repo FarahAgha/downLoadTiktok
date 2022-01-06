@@ -93,7 +93,7 @@ public class dlTikVideoDownloader {
         return videos;
     }
 
-    public static void dltikDownloadFromCSVFile(List<String> videos) throws InterruptedException {
+    public static void dltikDownloadFromCSVFile(List<String> videos) throws InterruptedException, IOException {
 
         String targetURL;
         targetURL = "https://dltik.com/";
@@ -103,47 +103,45 @@ public class dlTikVideoDownloader {
         WebDriver driver = DriverDeclaration.getWebDriver();
         try {
             myWriter = new FileWriter(Helper.getTodayDate() + ".csv");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("File object is create");
 
-        for (String vid : videos) {
-            driver.get(targetURL);
+            System.out.println("File object is create");
 
-            driver.findElement(By.id("txt-input-url")).click();
-            driver.findElement(By.id("txt-input-url")).sendKeys(vid);
+            for (String vid : videos) {
+                System.out.println("Video url=" + vid);
+                driver.get(targetURL);
 
-            driver.findElement(By.id("btn-submit-link")).click();
-            Thread.sleep(3000);
-            try {
-            String text = driver.findElement(By.xpath("//P[contains(text(),'#')]")).getText();
+                driver.findElement(By.id("txt-input-url")).click();
+                driver.findElement(By.id("txt-input-url")).sendKeys(vid);
 
-            String[] temp = text.split("\\#");
-            String tagName = (temp[0]);
+                driver.findElement(By.id("btn-submit-link")).click();
+                Thread.sleep(3000);
+                By byelment = By.xpath("//P[contains(text(),'#')]");
+                String tagName = null;
+                if(byelment != null) {
+                    String text = driver.findElement(byelment).getText();
+
+                    String[] temp = text.split("\\#");
+                    tagName = (temp[0]);
 //                    .replaceAll("[^a-zA-Z]", " ");
-            System.out.println(tagName);
-            System.out.println();
-
+                    System.out.println(tagName);
+                    System.out.println();
+                }
 
 
                 writeToCSVURLAndTagName(vid, tagName, myWriter);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            driver.findElement(By.xpath("//a[span='Download Server 1']")).click();
 
-        }
-        try {
-            myWriter.close();
+                driver.findElement(By.xpath("//a[span='Download Server 1']")).click();
+
+            }
 
         } catch (IOException e) {
+            myWriter.close();
             e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            myWriter.close();
         }
+
         driver.quit();
 
     }
