@@ -37,8 +37,7 @@ public class dlTikVideoDownloader {
             dltikDownload(videos);
 
         } catch (Exception e) {
-            if (driver != null)
-                driver.quit();
+            if (driver != null) driver.quit();
             e.printStackTrace();
         }
         driver.quit();
@@ -53,8 +52,7 @@ public class dlTikVideoDownloader {
 
         WebDriver driver = DriverDeclaration.getWebDriver();
 
-        for (WebElement vid : videos
-        ) {
+        for (WebElement vid : videos) {
             driver.get(targetURL);
             System.out.println(vid.getAttribute("href"));
 
@@ -86,8 +84,7 @@ public class dlTikVideoDownloader {
 
             return videos;
         } catch (Exception e) {
-            if (driver != null)
-                driver.quit();
+            if (driver != null) driver.quit();
             e.printStackTrace();
         }
         return videos;
@@ -112,25 +109,30 @@ public class dlTikVideoDownloader {
 
                 driver.findElement(By.id("txt-input-url")).click();
                 driver.findElement(By.id("txt-input-url")).sendKeys(vid);
+                System.out.println("Video URL entered");
 
                 driver.findElement(By.id("btn-submit-link")).click();
-                Thread.sleep(3000);
-                By byelment = By.xpath("//P[contains(text(),'#')]");
+                Thread.sleep(5000);
+                System.out.println("Down arrow button clicked");
+
+                By dwnBtn = By.xpath("//a[span='Download Server 1']");
+
+                System.out.println("Finding paragraph text to copy to file");
+                By byelment = By.xpath("//div[@id='download-section']/div[2]/p");
                 String tagName = null;
-                if(byelment != null) {
-                    String text = driver.findElement(byelment).getText();
 
-                    String[] temp = text.split("\\#");
-                    tagName = (temp[0]);
-//                    .replaceAll("[^a-zA-Z]", " ");
-                    System.out.println(tagName);
-                    System.out.println();
-                }
+                By userTagName = By.xpath("//*[@id='download-section']/div[2]/div[1]/div/b");
+                String userTagNameText = driver.findElement(userTagName).getText();
+                //*[@id="download-section"][contains(@style='display']
+                String text = driver.findElement(byelment).getText();
 
+                String[] temp = text.split("\\#");
+                tagName = (temp[0]);
+                if (tagName.equalsIgnoreCase("")) tagName = text;
+                System.out.println(userTagNameText+",\n"+text+"\n"+tagName);
 
-                writeToCSVURLAndTagName(vid, tagName, myWriter);
-
-                driver.findElement(By.xpath("//a[span='Download Server 1']")).click();
+                writeToCSVURLAndTagName(vid, tagName+","+userTagNameText, myWriter);
+                driver.findElement(dwnBtn).click();
 
             }
 
@@ -141,7 +143,6 @@ public class dlTikVideoDownloader {
             ex.printStackTrace();
             myWriter.close();
         }
-
         driver.quit();
 
     }
