@@ -1,6 +1,7 @@
 package com.company;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -115,6 +116,11 @@ public class dlTikVideoDownloader {
                 Thread.sleep(5000);
                 System.out.println("Down arrow button clicked");
 
+                System.out.println("Checking for //*[@id='process-alert']");
+                By checkAlert = By.xpath("//*[@id='process-alert']");
+                if(!elementExists(driver,checkAlert)){
+
+
                 By dwnBtn = By.xpath("//a[span='Download Server 1']");
 
                 System.out.println("Finding paragraph text to copy to file");
@@ -133,6 +139,7 @@ public class dlTikVideoDownloader {
 
                 writeToCSVURLAndTagName(vid, tagName+","+userTagNameText, myWriter);
                 driver.findElement(dwnBtn).click();
+                }
 
             }
 
@@ -145,5 +152,14 @@ public class dlTikVideoDownloader {
         }
         driver.quit();
 
+    }
+
+    public static boolean elementExists(WebDriver driver, By by){
+        try{
+            driver.findElement(by);
+            return true;
+        }catch (NoSuchElementException e){
+            return false;
+        }
     }
 }
