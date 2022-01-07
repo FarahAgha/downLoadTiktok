@@ -117,28 +117,30 @@ public class dlTikVideoDownloader {
                 System.out.println("Down arrow button clicked");
 
                 System.out.println("Checking for //*[@id='process-alert']");
-                By checkAlert = By.xpath("//*[@id='process-alert']");
-                if(!elementExists(driver,checkAlert)){
+                By checkAlert = By.xpath("//*[@id='process-alert'][contains(text(),'Error:')]");
+                if (!elementExists(driver, checkAlert)) {
 
 
-                By dwnBtn = By.xpath("//a[span='Download Server 1']");
+                    By dwnBtn = By.xpath("//a[span='Download Server 1']");
 
-                System.out.println("Finding paragraph text to copy to file");
-                By byelment = By.xpath("//div[@id='download-section']/div[2]/p");
-                String tagName = null;
+                    System.out.println("Finding paragraph text to copy to file");
+                    By byelment = By.xpath("//div[@id='download-section']/div[2]/p");
+                    String tagName = null;
 
-                By userTagName = By.xpath("//*[@id='download-section']/div[2]/div[1]/div/b");
-                String userTagNameText = driver.findElement(userTagName).getText();
-                //*[@id="download-section"][contains(@style='display']
-                String text = driver.findElement(byelment).getText();
+                    By userTagName = By.xpath("//*[@id='download-section']/div[2]/div[1]/div/b");
+                    String userTagNameText = driver.findElement(userTagName).getText();
+                    //*[@id="download-section"][contains(@style='display']
+                    String text = driver.findElement(byelment).getText();
 
-                String[] temp = text.split("\\#");
-                tagName = (temp[0]);
-                if (tagName.equalsIgnoreCase("")) tagName = text;
-                System.out.println(userTagNameText+",\n"+text+"\n"+tagName);
+                    String[] temp = text.split("\\#");
+                    tagName = (temp[0]);
+                    if (tagName.equalsIgnoreCase("")) tagName = text;
+                    System.out.println(userTagNameText + ",\n" + text + "\n" + tagName);
 
-                writeToCSVURLAndTagName(vid, tagName+","+userTagNameText, myWriter);
-                driver.findElement(dwnBtn).click();
+                    writeToCSVURLAndTagName(vid, tagName + "," + userTagNameText, myWriter);
+                    driver.findElement(dwnBtn).click();
+                }else{
+                    System.out.println("URL has not shown downloadable video "+vid);
                 }
 
             }
@@ -154,11 +156,11 @@ public class dlTikVideoDownloader {
 
     }
 
-    public static boolean elementExists(WebDriver driver, By by){
-        try{
+    public static boolean elementExists(WebDriver driver, By by) {
+        try {
             driver.findElement(by);
             return true;
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
