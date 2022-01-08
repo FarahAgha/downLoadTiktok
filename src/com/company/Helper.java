@@ -77,12 +77,12 @@ public class Helper {
 
         BufferedReader fileReader = null;
         String COMMA_DELIMITER = ",";
-        List<String> videoURLs = new ArrayList<String>();
+        List<String> videoURLs = new ArrayList<>();
 
         try {
 
             //Create a new list of student to be filled by CSV file data
-            String line = "";
+            String line;
 
             //Create the file reader
             fileReader = new BufferedReader(new FileReader(fileName));
@@ -101,7 +101,9 @@ public class Helper {
             e.printStackTrace();
         } finally {
             try {
-                fileReader.close();
+                if (fileReader != null) {
+                    fileReader.close();
+                }
             } catch (IOException e) {
                 System.out.println("Error while closing fileReader !!!");
                 e.printStackTrace();

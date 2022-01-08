@@ -38,7 +38,7 @@ public class dlTikVideoDownloader {
             dltikDownload(videos);
 
         } catch (Exception e) {
-            if (driver != null) driver.quit();
+            driver.quit();
             e.printStackTrace();
         }
         driver.quit();
@@ -91,7 +91,7 @@ public class dlTikVideoDownloader {
         return videos;
     }
 
-    public static void dltikDownloadFromCSVFile(List<String> videos) throws InterruptedException, IOException {
+    public static void dltikDownloadFromCSVFile(List<String> videos) throws IOException {
 
         String targetURL;
         targetURL = "https://dltik.com/";
@@ -117,15 +117,16 @@ public class dlTikVideoDownloader {
                 System.out.println("Down arrow button clicked");
 
                 System.out.println("Checking for //*[@id='process-alert']");
-                By checkAlert = By.xpath("//*[@id='process-alert'][contains(text(),'Error:')]");
-                if (!elementExists(driver, checkAlert)) {
+                By checkAlertChrome = By.xpath("//*[@id='process-alert'][contains(text(),'Error')]");
+                By checkAlertFireFox = By.xpath("//*[@id='process-alert'][contains(text(),'request')]");
+                if (!elementExists(driver, checkAlertChrome) && !elementExists(driver,checkAlertFireFox) ) {
 
 
                     By dwnBtn = By.xpath("//a[span='Download Server 1']");
 
-                    System.out.println("Finding paragraph text to copy to file");
+                     System.out.println("Finding paragraph text to copy to file");
                     By byelment = By.xpath("//div[@id='download-section']/div[2]/p");
-                    String tagName = null;
+                    String tagName;
 
                     By userTagName = By.xpath("//*[@id='download-section']/div[2]/div[1]/div/b");
                     String userTagNameText = driver.findElement(userTagName).getText();
@@ -146,10 +147,12 @@ public class dlTikVideoDownloader {
             }
 
         } catch (IOException e) {
+            assert myWriter != null;
             myWriter.close();
             e.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
+            assert myWriter != null;
             myWriter.close();
         }
         driver.quit();
