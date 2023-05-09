@@ -94,7 +94,7 @@ public class dlTikVideoDownloader {
     public static void dltikDownloadFromCSVFile(List<String> videos) throws IOException {
 
         String targetURL;
-        targetURL = "https://dltik.com/";
+        targetURL = "https://ssstik.io/";
         System.out.println("dltik URL " + targetURL);
         FileWriter myWriter = null;
 

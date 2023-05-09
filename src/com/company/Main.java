@@ -18,13 +18,11 @@ public class Main {
 
 
         //String filename = "//Users//fagha//Documents//myProjects//Read1641140159788.csv";
-        String filename = "C://Users//Deltaman//Downloads//www.tiktok.com-1641140159788.csv";
+        String filename = "C://Users//Deltaman//Downloads//www.tiktok.com-1641140159788_1.csv";
+        //String filename = "C://Users//Deltaman//Downloads//oneURL.txt";
+
         List<String> vidLst = readCsvFile(filename);
-        try {
-            dltikDownloadFromCSVFile(vidLst);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        dltikDownloadFromCSVFile(vidLst);
 
     }
 
