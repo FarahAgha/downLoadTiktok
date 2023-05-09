@@ -134,6 +134,7 @@ public class dlTikVideoDownloader {
                     String text = driver.findElement(byelment).getText();
 
                     String[] temp = text.split("\\#");
+                    String one = "one";
                     tagName = (temp[0]);
                     if (tagName.equalsIgnoreCase("")) tagName = text;
                     System.out.println(userTagNameText + ",\n" + text + "\n" + tagName);
