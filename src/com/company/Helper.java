@@ -85,7 +85,7 @@ public class Helper {
             String line;
 
             //Create the file reader
-            fileReader = new BufferedReader(new FileReader(fileName));
+            fileReader = new BufferedReader(new  FileReader(fileName));
 
             //Read the CSV file header to skip it
 //            fileReader.readLine();
@@ -120,7 +120,5 @@ public class Helper {
             myWriter.write("\n");
             System.out.println("Files written " + ++vCounter);
         }
-
-
 
 }

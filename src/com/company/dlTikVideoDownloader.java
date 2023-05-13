@@ -1,12 +1,11 @@
 package com.company;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.sun.java.swing.plaf.gtk.GTKConstants;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.List;
 
 import static com.company.Helper.writeToCSVURLAndTagName;
@@ -90,17 +89,16 @@ public class dlTikVideoDownloader {
         }
         return videos;
     }
-
-    public static void dltikDownloadFromCSVFile(List<String> videos) throws IOException {
+    public static void dltikDownloadFromCSVFileVersion2(List<String> videos,String savePath ) throws IOException {
 
         String targetURL;
-        targetURL = "https://ssstik.io/";
-        System.out.println("dltik URL " + targetURL);
+        targetURL = "https://snaptik.app/";
+        System.out.println("ssstik URL " + targetURL);
         FileWriter myWriter = null;
-
+        String WritefileNameDate = Helper.getTodayDate();
         WebDriver driver = DriverDeclaration.getWebDriver();
         try {
-            myWriter = new FileWriter(Helper.getTodayDate() + ".csv");
+            myWriter= new FileWriter(WritefileNameDate+ "_download.csv");
 
             System.out.println("File object is create");
 
@@ -108,43 +106,36 @@ public class dlTikVideoDownloader {
                 System.out.println("Video url=" + vid);
                 driver.get(targetURL);
 
-                driver.findElement(By.id("txt-input-url")).click();
-                driver.findElement(By.id("txt-input-url")).sendKeys(vid);
+                driver.findElement(By.xpath("//*[@placeholder='Paste TikTok link here']")).click();
+                driver.findElement(By.xpath("//*[@placeholder='Paste TikTok link here']")).sendKeys(vid);
                 System.out.println("Video URL entered");
 
-                driver.findElement(By.id("btn-submit-link")).click();
-                Thread.sleep(5000);
-                System.out.println("Down arrow button clicked");
 
-                System.out.println("Checking for //*[@id='process-alert']");
-                By checkAlertChrome = By.xpath("//*[@id='process-alert'][contains(text(),'Error')]");
-                By checkAlertFireFox = By.xpath("//*[@id='process-alert'][contains(text(),'request')]");
-                if (!elementExists(driver, checkAlertChrome) && !elementExists(driver,checkAlertFireFox) ) {
+                By downloadBtnXpath = By.xpath("//button[@type='submit']");
+//                elementExists(driver,downloadBtnXpath);
 
+                driver.findElement(downloadBtnXpath).click();
+//                Thread.sleep(35000);
+                System.out.println("Getting element title ");
+                String titleXpath = "//div[@class='video-title']";
+                String videoText = driver.findElement(By.xpath(titleXpath)).getText();
 
-                    By dwnBtn = By.xpath("//a[span='Download Server 1']");
+                System.out.println("Getting element title ");
+                String titleUser= driver.findElement(
+                        By.xpath("//div[@class='info']/span")).getText();
 
-                     System.out.println("Finding paragraph text to copy to file");
-                    By byelment = By.xpath("//div[@id='download-section']/div[2]/p");
-                    String tagName;
+                System.out.println("Href "+ titleUser);
 
-                    By userTagName = By.xpath("//*[@id='download-section']/div[2]/div[1]/div/b");
-                    String userTagNameText = driver.findElement(userTagName).getText();
-                    //*[@id="download-section"][contains(@style='display']
-                    String text = driver.findElement(byelment).getText();
+                driver.findElement(By.xpath(
+                        "//*[@class='button download-file']")).click();
 
-                    String[] temp = text.split("\\#");
-                    String one = "one";
-                    tagName = (temp[0]);
-                    if (tagName.equalsIgnoreCase("")) tagName = text;
-                    System.out.println(userTagNameText + ",\n" + text + "\n" + tagName);
+//                String hrefValue = driver.findElement(By.xpath(
+//                        "//*[@class='button download-file']")).getAttribute("href");
+//                System.out.println("Href "+ hrefValue);
+//                extractedVideoFromSSStok(hrefValue,videoText,savePath);
 
-                    writeToCSVURLAndTagName(vid, tagName + "," + userTagNameText, myWriter);
-                    driver.findElement(dwnBtn).click();
-                }else{
-                    System.out.println("URL has not shown downloadable video "+vid);
-                }
-
+                String tagName = "#funnypets,#shorts";
+                writeToCSVURLAndTagName(vid,  videoText+","+titleUser, myWriter);
             }
 
         } catch (IOException e) {
@@ -156,16 +147,103 @@ public class dlTikVideoDownloader {
             assert myWriter != null;
             myWriter.close();
         }
+        finally {
+            myWriter.close();
+        }
+        driver.quit();
+
+    }
+    public static void dltikDownloadFromCSVFile(List<String> videos,String savePath ) throws IOException {
+
+        String targetURL;
+        targetURL = "https://ssstik.com/";
+        System.out.println("ssstik URL " + targetURL);
+        FileWriter myWriter = null;
+        String WritefileNameDate = Helper.getTodayDate();
+        WebDriver driver = DriverDeclaration.getWebDriver();
+        try {
+            myWriter= new FileWriter(WritefileNameDate+ "_download.csv");
+
+            System.out.println("File object is create");
+
+            for (String vid : videos) {
+                System.out.println("Video url=" + vid);
+                driver.get(targetURL);
+
+                driver.findElement(By.xpath("//*[@placeholder='Paste a TikTok video link here']")).click();
+                driver.findElement(By.xpath("//*[@placeholder='Paste a TikTok video link here']")).sendKeys(vid);
+                System.out.println("Video URL entered");
+
+                elementExists(driver,By.xpath("//*[@id='searchBoxBtn']/span[contains(text(),'DOWNLOAD')]"));
+
+                driver.findElement(By.xpath("//*[@id='searchBoxBtn']/span[contains(text(),'DOWNLOAD')]")).click();
+                Thread.sleep(35000);
+                System.out.println("getting element to right clicked");
+                WebElement rightClickElement = driver.findElements(By.xpath("//*[@class='downbutt vLink']")).get(0);
+
+                String hrefValue =rightClickElement.getAttribute("href");
+                System.out.println("Href "+ hrefValue);
+
+
+
+                String videoText = driver.findElements(By.xpath("//h2")).get(0).getText();
+                System.out.println("video Text "+ videoText);
+                extractedVideoFromSSStok(hrefValue,videoText,savePath);
+
+                String tagName = "#funnypets,#shorts";
+                writeToCSVURLAndTagName(vid,  videoText, myWriter);
+            }
+
+        } catch (IOException e) {
+            assert myWriter != null;
+            myWriter.close();
+            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            assert myWriter != null;
+            myWriter.close();
+        }
+        finally {
+            myWriter.close();
+        }
         driver.quit();
 
     }
 
+    private static void extractedVideoFromSSStok(String hrefValue,String fileName,String savePath){
+        // saving video
+         try
+         {
+            String savefileName = fileName+".mp4";
+                    //"//Users//fagha//Documents//myProjects//mp4Downloads//"+Helper.getTodayDate()+".mp4";
+            URL imageURL = new URL(hrefValue);
+            InputStream in = null;
+
+            in = new BufferedInputStream(imageURL.openStream());
+
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(savefileName));
+
+            for ( int i; (i = in.read()) != -1; ) {
+                out.write(i);
+            }
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static boolean elementExists(WebDriver driver, By by) {
         try {
+
             driver.findElement(by);
             return true;
         } catch (NoSuchElementException e) {
             return false;
         }
     }
+
+
+
+
 }
