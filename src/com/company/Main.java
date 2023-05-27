@@ -1,11 +1,13 @@
 package com.company;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
 import java.io.IOException;
 import java.util.List;
 
 import static com.company.Helper.readCsvFile;
-import static com.company.dlTikVideoDownloader.dltikDownloadFromCSVFile;
-import static com.company.dlTikVideoDownloader.dltikDownloadFromCSVFileVersion2;
+import static com.company.dlTikVideoDownloader.*;
 
 
 public class Main {
@@ -25,8 +27,17 @@ public class Main {
         List<String> vidLst = readCsvFile(filename);
 //        dltikDownloadFromCSVFile(vidLst,readPath+"downloads//"+WritefileNameDate);
 
-        dltikDownloadFromCSVFileVersion2(vidLst,readPath+"downloads//"+WritefileNameDate);
+//        dltikDownloadFromCSVFileVersion2(vidLst,readPath+"downloads//"+WritefileNameDate);
+
+        WebDriver driver = DriverDeclaration.getWebDriver();
+
+        dlTikVideoDownloader dl = new dlTikVideoDownloader(driver);
+        dl.tickTokDownloaderTTSave(vidLst,readPath+"downloads//"+WritefileNameDate);
+
+        driver.quit();
 
     }
+
+
 
 }
