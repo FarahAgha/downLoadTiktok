@@ -1,14 +1,17 @@
 package com.company;
 
-import com.sun.java.swing.plaf.gtk.GTKConstants;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
+import static com.company.Helper.CleanUpFileName;
 import static com.company.Helper.writeToCSVURLAndTagName;
 
 public class dlTikVideoDownloader extends BasePage<WebDriver> {
@@ -129,13 +132,11 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
                 String videoText = driver.findElement(By.xpath(titleXpath)).getText();
 
                 System.out.println("Getting element title ");
-                String titleUser = driver.findElement(
-                        By.xpath("//div[@class='info']/span")).getText();
+                String titleUser = driver.findElement(By.xpath("//div[@class='info']/span")).getText();
 
                 System.out.println("Href " + titleUser);
 
-                driver.findElement(By.xpath(
-                        "//*[@class='button download-file']")).click();
+                driver.findElement(By.xpath("//*[@class='button download-file']")).click();
 
 //                String hrefValue = driver.findElement(By.xpath(
 //                        "//*[@class='button download-file']")).getAttribute("href");
@@ -153,7 +154,6 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
         } catch (Exception ex) {
             ex.printStackTrace();
             assert myWriter != null;
-            myWriter.close();
         } finally {
             myWriter.close();
         }
@@ -197,7 +197,6 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
                 System.out.println("video Text " + videoText);
                 extractedVideoFromSSStok(hrefValue, videoText, savePath);
 
-                String tagName = "#funnypets,#shorts";
                 writeToCSVURLAndTagName(vid, videoText, myWriter);
             }
 
@@ -208,7 +207,6 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
         } catch (Exception ex) {
             ex.printStackTrace();
             assert myWriter != null;
-            myWriter.close();
         } finally {
             myWriter.close();
         }
@@ -219,14 +217,15 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
     private static void extractedVideoFromSSStok(String hrefValue, String fileName, String savePath) {
         // saving video
         try {
-            String savefileName = fileName + ".mp4";
-            //"//Users//fagha//Documents//myProjects//mp4Downloads//"+Helper.getTodayDate()+".mp4";
+            String savefileName = savePath + fileName + ".mp4";
+            //"//Users//fagha//Documents//myProjects//mp4Downloads//"+Helper.getTodayDate()+".mp4";//"dummy" + ".mp4";
+            //
             URL imageURL = new URL(hrefValue);
-            InputStream in = null;
+            InputStream in;
 
             in = new BufferedInputStream(imageURL.openStream());
 
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(savefileName));
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(savefileName)));
 
             for (int i; (i = in.read()) != -1; ) {
                 out.write(i);
@@ -249,55 +248,79 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
     }
 
 
-    public void tickTokDownloaderTTSave(List<String> vidLst, String WritefileNameDate) {
-
-//        WebDriver driver = DriverDeclaration.getWebDriver();
+    public void extractedVideoFromTTSave(List<String> vidLst, String folderName, String WritefileNameDate) {
 
         String targetURL;
         targetURL = "https://ttsave.app/";
         System.out.println("ssstik URL " + targetURL);
-//        FileWriter myWriter = null;
-//        try {
-//            myWriter = new FileWriter(WritefileNameDate + "_download.csv");
+        FileWriter myWriter = null;
+        try {
+            File file = new File(folderName + WritefileNameDate + "_download.csv");
+            file.getParentFile().mkdirs();
+            myWriter = new FileWriter(file);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
 
+
+        try {
             System.out.println("File object is create");
-
+            writeToCSVURLAndTagName("VideoId", "ChannelName,VideoTitle,Filename", myWriter);
             for (String vid : vidLst) {
                 System.out.println("Video url=" + vid);
-                driver.get(targetURL);
-
-                By searchQueryBy = By.xpath("//input[@id=\'input-query\']");
-                By downloadBy = By.xpath("//button[@id=\'btn-download\']/span");
-                By withWaterMarkBy = By.xpath("//span[contains(.,\'DOWNLOAD (WITHOUT WATERMARK)\')]");
-
-                driver.findElement(searchQueryBy).click();
-                driver.findElement(searchQueryBy).sendKeys(vid);
-
                 try {
+                    if (!vid.isEmpty()) {
+                        driver.get(targetURL);
+
+                        By searchQueryBy = By.xpath("//input[@id='input-query']");
+                        By downloadBy = By.xpath("//button[@id='btn-download']/span");
+                        By withWaterMarkBy = By.xpath("//span[contains(.,'DOWNLOAD (WITHOUT WATERMARK)')]");
+
+                        driver.findElement(searchQueryBy).click();
+                        driver.findElement(searchQueryBy).sendKeys(vid);
+
+                        driver.findElement(downloadBy).click();
+                        Thread.sleep(6000);
+
+                        By hrefBy = By.xpath("//*[@id='button-download-ready']/a[1]");
+                        String hyperlinkText = driver.findElement(hrefBy).getAttribute("href");
 
 
-//                waitUntilElementIsVisible(withWaterMarkBy);
+                        System.out.println("hyperlinkText " + hyperlinkText);
+                        String title = CleanUpFileName(driver.findElement(By.xpath("//*[@id='result-container']/div/a[@title]")).getText());
+                        String comment = CleanUpFileName(driver.findElement(By.xpath("//div[@id='result-container']/div/p[1]")).getText());
 
-                driver.findElement(downloadBy).click();
-                    Thread.sleep(6000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+
+                        String videoText = title + " , " + comment;
+                        ////"//Users//fagha//Documents//myProjects//mp4Downloads//"+Helper.getTodayDate()+".mp4";
+                        String saveDownloadPath = folderName + "//";
+                        String downloadFileName = Helper.getTodayDate();
+                        extractedVideoFromSSStok(hyperlinkText, downloadFileName, saveDownloadPath);
+                        videoText += "," + downloadFileName;
+                        System.out.println("videoText " + videoText);
+                        writeToCSVURLAndTagName(vid, videoText, myWriter);
+
+                        //                    driver.findElement(withWaterMarkBy).click();
+                        System.out.println("Done");
+                    } else {
+                        System.out.println("Line was empty");
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
                 }
+            }//for
+            myWriter.close();
+        } //try
 
-                String s1 = driver.findElement(By.xpath("//div[@id=\'result-container\']/div/a[2]")).getText();
-                String s2 = driver.findElement(By.xpath("//div[@id=\'result-container\']/div/p")).getText();
-                String s3 = driver.findElement(By.xpath("//div[@id=\'result-container\']/div")).getText();
-
-                System.out.println(s1+" "+s2+" "+s3);
-
-                driver.findElement(withWaterMarkBy).click();
-                System.out.println("Done");
-            }
-//        } catch (Exception e) {
+        catch (IOException e) {
+//            myWriter.close();
 //            throw new RuntimeException(e);
-//        }
 
-    }
+        } finally {
+            if (driver != null) driver.quit();
 
-
+        }
+    }//end of function
 }
+
+

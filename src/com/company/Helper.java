@@ -19,6 +19,7 @@ import java.util.List;
 public class Helper {
 
     static int vCounter;
+
     public static String getTodayDate() {
         String today = "";
         try {
@@ -48,13 +49,11 @@ public class Helper {
             Thread.sleep(10000);
             videos = driver.findElements(videoPath);
             System.out.println("Total count so far " + videos.size());
-            for (WebElement link : videos
-            ) {
+            for (WebElement link : videos) {
                 ele = link;
             }
             jse.executeScript("arguments[0].scrollIntoView(true);", ele);
-            if (count == videos.size())
-                break;
+            if (count == videos.size()) break;
             count = videos.size();
         }
         System.out.println("Returning List");
@@ -65,8 +64,7 @@ public class Helper {
         System.out.println("Inside channel Videos to CSV");
 
         System.out.println("" + videos.size());
-        for (WebElement link : videos
-        ) {
+        for (WebElement link : videos) {
             myWriter.write(link.getAttribute("href"));
             myWriter.write("\n");
         }
@@ -76,7 +74,6 @@ public class Helper {
     public static List<String> readCsvFile(String fileName) {
 
         BufferedReader fileReader = null;
-        String COMMA_DELIMITER = ",";
         List<String> videoURLs = new ArrayList<>();
 
         try {
@@ -85,14 +82,14 @@ public class Helper {
             String line;
 
             //Create the file reader
-            fileReader = new BufferedReader(new  FileReader(fileName));
+            fileReader = new BufferedReader(new FileReader(fileName));
 
             //Read the CSV file header to skip it
 //            fileReader.readLine();
 
             //Read the file line by line starting from the second line
             while ((line = fileReader.readLine()) != null) {
-                    videoURLs.add(line);
+                videoURLs.add(line);
 //                }
             }
 
@@ -113,12 +110,22 @@ public class Helper {
 
     }
 
-    public static void writeToCSVURLAndTagName(String videos,String temp, FileWriter myWriter) throws IOException {
+    public static void writeToCSVURLAndTagName(String videos, String temp, FileWriter myWriter) throws IOException {
         System.out.println("Writing channelVideos to CSV");
-            myWriter.write(videos+',');
-            myWriter.write(temp);
-            myWriter.write("\n");
-            System.out.println("Files written " + ++vCounter);
-        }
+        myWriter.write(videos + ',');
+        myWriter.write(temp);
+        myWriter.write("\n");
+        System.out.println("Record count written " + ++vCounter);
+    }
+
+
+    public static String CleanUpFileName(String title) {
+
+        return title.replace(",", " ");
+    }
+
 
 }
+
+
+

@@ -3,9 +3,6 @@ package com.company;
 
 import org.openqa.selenium.Point;
 import org.openqa.selenium.*;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.support.ui.*;
 
 import javax.imageio.ImageIO;
@@ -14,9 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.List;
-import java.util.logging.Level;
 
 public abstract class BasePage<T extends WebDriver> {
 
@@ -27,27 +22,6 @@ public abstract class BasePage<T extends WebDriver> {
     public BasePage(WebDriver driver, int waitTimeOutSeconds) {
         this.driver = driver;
         this.waitTimeOutSeconds = waitTimeOutSeconds;
-
-    }
-
-    public static void ZoomOut(int count) {
-        Robot robot;
-        try {
-            robot = new Robot();
-            for (int i = 1; i <= count; i++) {
-                robot.keyRelease(KeyEvent.VK_CONTROL);
-                robot.keyRelease(KeyEvent.VK_SUBTRACT);
-                robot.keyPress(KeyEvent.VK_CONTROL);
-                robot.keyPress(KeyEvent.VK_SUBTRACT);
-                robot.keyRelease(KeyEvent.VK_CONTROL);
-                robot.keyRelease(KeyEvent.VK_SUBTRACT);
-                Thread.sleep(1000);
-            }
-
-        } catch (AWTException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public WebElement findElement(By by) {
@@ -99,8 +73,7 @@ public abstract class BasePage<T extends WebDriver> {
      * wait until condition is true or timeout kicks in
      */
     protected <V> void wait_until_true_or_timeout(ExpectedCondition<V> isTrue) {
-        Wait<WebDriver> wait = new WebDriverWait(this.driver, waitTimeOutSeconds)
-                .ignoring(StaleElementReferenceException.class);
+        Wait<WebDriver> wait = new WebDriverWait(this.driver, waitTimeOutSeconds).ignoring(StaleElementReferenceException.class);
         wait.until(isTrue);
     }
 
@@ -144,7 +117,7 @@ public abstract class BasePage<T extends WebDriver> {
 
         } catch (StaleElementReferenceException e) {
             System.out.println("StaleElementReferenceException-" + e.getLocalizedMessage());
-            
+
             e.printStackTrace();
 
 
@@ -198,7 +171,6 @@ public abstract class BasePage<T extends WebDriver> {
     }
 
 
-
     public void takeWebElementScreenshot(By by, String fileName) {
         File screen = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         WebElement element = driver.findElement(by);
@@ -215,8 +187,7 @@ public abstract class BasePage<T extends WebDriver> {
         }
 
         assert img != null;
-        BufferedImage dest = img.getSubimage(p.getX(), p.getY(), width,
-                height);
+        BufferedImage dest = img.getSubimage(p.getX(), p.getY(), width, height);
 
         File testFile = new File("./log/" + "ActualScreenshots/" + fileName + ".png");
         try {
