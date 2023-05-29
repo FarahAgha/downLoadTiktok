@@ -287,14 +287,15 @@ public class dlTikVideoDownloader extends BasePage<WebDriver> {
 
 
                         System.out.println("hyperlinkText " + hyperlinkText);
-                        String title = CleanUpFileName(driver.findElement(By.xpath("//*[@id='result-container']/div/a[@title]")).getText());
+                        String tkAuthor = CleanUpFileName(driver.findElement(By.xpath("//*[@id='result-container']/div/a[@title]")).getText());
                         String comment = CleanUpFileName(driver.findElement(By.xpath("//div[@id='result-container']/div/p[1]")).getText());
 
 
-                        String videoText = title + " , " + comment;
+                        String videoText = tkAuthor + " , " + comment;
                         ////"//Users//fagha//Documents//myProjects//mp4Downloads//"+Helper.getTodayDate()+".mp4";
                         String saveDownloadPath = folderName + "//";
-                        String downloadFileName = Helper.getTodayDate();
+                        String downloadFileName = "DRAFT -- "+comment+"tk_author:"+tkAuthor;
+                                //Helper.getTodayDate();
                         extractedVideoFromSSStok(hyperlinkText, downloadFileName, saveDownloadPath);
                         videoText += "," + downloadFileName;
                         System.out.println("videoText " + videoText);
